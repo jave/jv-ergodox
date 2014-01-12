@@ -128,21 +128,20 @@ const uint8_t PROGMEM _kb_layout[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
 {{#LAYERS}}
 {{>KEYS:classdecl:erg-layout}}
 {{/LAYERS}}
-}
+};
 
-
-const uint8_t PROGMEM _kb_press[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+const void_funptr_t PROGMEM _kb_layout_press[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
 {{#LAYERS}}
 {{>KEYS:classdecl:erg-press}}
 {{/LAYERS}}
-}
+};
 
-const uint8_t PROGMEM _kb_release[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+const void_funptr_t PROGMEM _kb_layout_release[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
 {{#LAYERS}}
 {{>KEYS:classdecl:erg-release}}
 {{/LAYERS}}
-}
-}
+};
+
 ----
 
 template erg-layout-top :indent
@@ -176,7 +175,7 @@ template erg-layout :indent
 sectiondictionary "KEYS"
 ----
 {{#FIRST}}
-KB_MATRIX_LAYER({{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{NAME}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}{{#KEYS}}{{NAME}}{{/KEYS}})
+KB_MATRIX_LAYER({{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{NAME}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}{{#KEYS}}{{NAME}}{{/KEYS}}),
 {{/LAST}}
 ----
 bind "e"
@@ -187,7 +186,7 @@ template erg-press :indent
 sectiondictionary "KEYS"
 ----
 {{#FIRST}}
-KB_MATRIX_LAYER({{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{PRESS}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}{{#KEYS}}{{PRESS}}{{/KEYS}})
+KB_MATRIX_LAYER({{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{PRESS}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}{{#KEYS}}{{PRESS}}{{/KEYS}}),
 {{/LAST}}
 ----
 bind "e"
@@ -200,7 +199,7 @@ sectiondictionary "KEYS"
 KB_MATRIX_LAYER(
 {{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{RELEASE}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}
 {{#KEYS}}{{RELEASE}}{{/KEYS}}
-)
+),
 {{/LAST}}
 ----
 bind "e"

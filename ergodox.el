@@ -11,7 +11,7 @@
 (setq erg-layout  '(
                     (
                      ;; unused
-                     0_LAYER_1
+                     0
                      ;; left hand
                      _esc	(_8 :a)	(_7 :s)	_0	_8	_0	_esc	
                      _altL	_comma	_comma	_period	_P	_Y	1	
@@ -33,7 +33,7 @@
 
                      )
                     (	;; unused
-                     0_LAYER_2
+                     0
                      ;; left hand
                      KEY_CapsLock	KEY_7_Ampersand	0x2F	0x30	0	0	0	
                      KEY_LeftAlt	0	0	KEY_UpArrow	KEY_PageUp	0	1	
@@ -55,7 +55,7 @@
                      )
                     (
                      ;; unused
-                     0_LAYER_3	
+                     0
                      ;; left hand
                      0	0	0	0	0	0	0	
                      0	0	0	_7	_0	45	0	
@@ -111,14 +111,14 @@
 
 (defun erg-test-create ()
   (interactive) ;;doesnt really have to be but is convenient
-  (switch-to-buffer "tst.c")
+  (switch-to-buffer "jv-mod.c")
   (erase-buffer)
   (erg-create-layout-file "mupp" erg-layout)
   )
 
 
 (defun erg-keyfunc (sym)
-  (or (cadr (assoc sym '((:a saltgrpre) (:s sshrpr)))) sym)
+  (or (cadr (assoc sym '((:a saltgrprre) (:s sshprre)))) sym)
 )
 
 ;;from info
@@ -145,17 +145,22 @@
                      (srecode-dictionary-set-value subdict "NAME" (format "%s" 0))
                      (srecode-dictionary-set-value subdict "PRESS" "NULL")
                      (srecode-dictionary-set-value subdict "RELEASE" "NULL")                         )
-                    ((atom key) ;;atom map to atom kprrel kprrel
+
+                    ((atom key) ;;atom map to atom kprrel kprrel, a keypress
                      (srecode-dictionary-set-value subdict "NAME" (format "%s" key))
                      (srecode-dictionary-set-value subdict "PRESS" "kprrel")
                      (srecode-dictionary-set-value subdict "RELEASE" "kprrel")                          )
+
                     ((and  (= 2 (length key)) (eq :l (car key))) ;; a special case for push/pop
                      (srecode-dictionary-set-value subdict "NAME" (format "%s" (cadr key)))
                      (srecode-dictionary-set-value subdict "PRESS" (format "lpush%s" (cadr key)))
                      (srecode-dictionary-set-value subdict "RELEASE" (format "lpop%s"  (cadr key))))
+
                     ((= 2 (length key));; atom atom map to atom atom atom
+                     (srecode-dictionary-set-value subdict "NAME" (format "%s" (car key)))
                      (srecode-dictionary-set-value subdict "PRESS" (format "%s" (erg-keyfunc  (cadr key))))
                      (srecode-dictionary-set-value subdict "RELEASE" (format "%s" (erg-keyfunc  (cadr key)))))
+
                     (t (srecode-dictionary-set-value subdict "NAME" (format "%s"  (car key))) ;; full form 3 atoms, map to atoms
                        (srecode-dictionary-set-value subdict "PRESS" (format "%s" (erg-keyfunc (cadr key))))
                        (srecode-dictionary-set-value subdict "RELEASE" (format "%s" (erg-keyfunc (caddr key)))))
