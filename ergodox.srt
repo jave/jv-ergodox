@@ -1,0 +1,206 @@
+;;ergodox template
+set mode "c-mode"
+set escape_start "{{"
+set escape_end "}}"
+
+context file
+
+set comment_start  "/**"
+set comment_end    " */"
+set comment_prefix " *"
+
+set DOLLAR "$"
+
+context classdecl
+
+template ergodox-mod
+"ergodox mod"
+----
+/* ----------------------------------------------------------------------------
+* ergoDOX layout : QWERTY (modified from the Kinesis layout)
+* -----------------------------------------------------------------------------
+* Copyright (c) 2012 Ben Blazak <benblazak.dev@gmail.com>
+* Released under The MIT License (MIT) (see "license.md")
+* Project located at <https://github.com/benblazak/ergodox-firmware>
+* -------------------------------------------------------------------------- */
+#include <stdint.h>
+#include <stddef.h>
+#include <avr/pgmspace.h>
+#include "../../../lib/data-types/misc.h"
+#include "../../../lib/usb/usage-page/keyboard--short-names.h"
+#include "../../../lib-other/pjrc/usb_keyboard/usb_keyboard.h"
+#include "../../../lib/key-functions/public.h"
+#include "../../../lib/key-functions/private.h"
+#include "../matrix.h"
+#include "../layout.h"
+
+#include "../../../lib/usb/usage-page/keyboard.h"
+#include "../../../keyboard/layout.h"
+#include "../../../main.h"
+
+
+// FUNCTIONS ------------------------------------------------------------------
+void kbfun_layer_pop_all(void) {
+  kbfun_layer_pop_1();
+  kbfun_layer_pop_2();
+  kbfun_layer_pop_3();
+  kbfun_layer_pop_4();
+  kbfun_layer_pop_5();
+  kbfun_layer_pop_6();
+  kbfun_layer_pop_7();
+  kbfun_layer_pop_8();
+  kbfun_layer_pop_9();
+  kbfun_layer_pop_10();
+}
+
+// DEFINITIONS ----------------------------------------------------------------
+#define  kprrel   &kbfun_press_release
+#define  ktog     &kbfun_toggle
+#define  ktrans   &kbfun_transparent
+#define  lpush1   &kbfun_layer_push_1
+#define  lpush2   &kbfun_layer_push_2
+#define  lpush3   &kbfun_layer_push_3
+#define  lpush4   &kbfun_layer_push_4
+#define  lpush5   &kbfun_layer_push_5
+#define  lpush6   &kbfun_layer_push_6
+#define  lpush7   &kbfun_layer_push_7
+#define  lpush8   &kbfun_layer_push_8
+#define  lpush9   &kbfun_layer_push_9
+#define  lpush10  &kbfun_layer_push_10
+#define  lpop     &kbfun_layer_pop_all
+#define  lpop1    &kbfun_layer_pop_1
+#define  lpop2    &kbfun_layer_pop_2
+#define  lpop3    &kbfun_layer_pop_3
+#define  lpop4    &kbfun_layer_pop_4
+#define  lpop5    &kbfun_layer_pop_5
+#define  lpop6    &kbfun_layer_pop_6
+#define  lpop7    &kbfun_layer_pop_7
+#define  lpop8    &kbfun_layer_pop_8
+#define  lpop9    &kbfun_layer_pop_9
+#define  lpop10   &kbfun_layer_pop_10
+#define  dbtldr   &kbfun_jump_to_bootloader
+#define  sshprre  &kbfun_shift_press_release
+#define  s2kcap   &kbfun_2_keys_capslock_press_release
+#define  slpunum  &kbfun_layer_push_numpad
+#define  slponum  &kbfun_layer_pop_numpad
+
+#define  IS_PRESSED    main_arg_is_pressed
+void kbfun_altgr_press_release(void) {
+	_kbfun_press_release(IS_PRESSED, KEY_RightAlt);
+	kbfun_press_release();
+    usb_keyboard_send();
+}
+#define  saltgrprre  &kbfun_altgr_press_release
+
+void local_kbfun_macro00(void) {
+    _kbfun_press_release(true,  _H);
+    usb_keyboard_send();
+    _kbfun_press_release(false, _H);
+    _kbfun_press_release(true,  _I);
+    usb_keyboard_send();
+    _kbfun_press_release(false, _I);
+}
+
+void altx(void) {
+    _kbfun_press_release(true,  KEY_LeftAlt);
+    usb_keyboard_send();
+    _kbfun_press_release(true, _X); 
+    usb_keyboard_send();
+    _kbfun_press_release(false,  _X);
+    usb_keyboard_send();
+    _kbfun_press_release(false, KEY_LeftAlt);
+}
+
+void ctrlx(void) {
+    _kbfun_press_release(true,  KEY_LeftControl);
+    usb_keyboard_send();
+    _kbfun_press_release(true, _X);
+    usb_keyboard_send();
+    _kbfun_press_release(false,  _X);
+    usb_keyboard_send();
+    _kbfun_press_release(false, KEY_LeftControl);
+}
+
+
+
+
+const uint8_t PROGMEM _kb_layout[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+{{#LAYERS}}
+{{>KEYS:classdecl:erg-layout}}
+{{/LAYERS}}
+}
+
+
+const uint8_t PROGMEM _kb_press[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+{{#LAYERS}}
+{{>KEYS:classdecl:erg-press}}
+{{/LAYERS}}
+}
+
+const uint8_t PROGMEM _kb_release[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+{{#LAYERS}}
+{{>KEYS:classdecl:erg-release}}
+{{/LAYERS}}
+}
+}
+----
+
+template erg-layout-top :indent
+""
+sectiondictionary "LAYERS"
+----
+const uint8_t PROGMEM _kb_layout[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+{{#LAYERS}}
+{{>KEYS:classdecl:erg-layout}}
+{{/LAYERS}}
+}
+
+
+const uint8_t PROGMEM _kb_press[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+{{#LAYERS}}
+{{>KEYS:classdecl:erg-press}}
+{{/LAYERS}}
+}
+
+const uint8_t PROGMEM _kb_release[KB_LAYERS][KB_ROWS][KB_COLUMNS] = {
+{{#LAYERS}}
+{{>KEYS:classdecl:erg-release}}
+{{/LAYERS}}
+}
+----
+bind "e"
+
+
+template erg-layout :indent
+""
+sectiondictionary "KEYS"
+----
+{{#FIRST}}
+KB_MATRIX_LAYER({{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{NAME}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}{{#KEYS}}{{NAME}}{{/KEYS}})
+{{/LAST}}
+----
+bind "e"
+
+
+template erg-press :indent
+""
+sectiondictionary "KEYS"
+----
+{{#FIRST}}
+KB_MATRIX_LAYER({{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{PRESS}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}{{#KEYS}}{{PRESS}}{{/KEYS}})
+{{/LAST}}
+----
+bind "e"
+
+template erg-release :indent
+""
+sectiondictionary "KEYS"
+----
+{{#FIRST}}
+KB_MATRIX_LAYER(
+{{/FIRST}}{{#NOTLAST}}{{#KEYS}}{{RELEASE}}, {{/KEYS}}{{/NOTLAST}}{{#LAST}}
+{{#KEYS}}{{RELEASE}}{{/KEYS}}
+)
+{{/LAST}}
+----
+bind "e"
