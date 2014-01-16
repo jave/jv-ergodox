@@ -9,12 +9,12 @@
 ;; kprrel,	sshprre,	kprrel,	kprrel,	kprrel,	kprrel,	lpush1,
 ;; lpop1 
 (setq erg-layout  '(
-                    (
+                    (;;0
                      ;; unused
                      0
                      ;; left hand
-                     _esc	(_8 :a)	(_7 :s)	_0	_8	_0	_esc	
-                     _altL	_comma	_comma	_period	_P	_Y	1	
+                     _esc	(_8 :a)	(_7 :a)	(_0 :a)	(_8 :s)	(_0 :s)	_esc	
+                     _altL	(_comma :s)	_comma	_period	_P	_Y	1	
                      _ctrlL    _A	_O	_E	_U	_I	
                      _shiftL	50	_Q	_J	_K	_X	1	
                      _guiL	50	_backslash	(:l 2)	(:l 1)	
@@ -22,20 +22,21 @@
                      0	0	_ctrlL	
                      _bs	_tab	_shiftL
                      ;; right hand 51 was got with xev 45 wtih random trial and terror
-                     2	51-1	_9	45	_9	_1	_3	
+                     2	(50 :s)	(_9 :s)	45	(_9 :a)	(_1 :s)	(_3 :s)	
                      _bracketL	_F	_G	_C	_R	_L	_altL	
                      _D	_H	_T	_N	_S	_ctrlL	
                      1	_B	_M	_W _V _Z	_shiftL	
-                     1	2	_arrowU	KEY_RightArrow	_guiR	
+                     (:l 1 ) 	(:l 2)	_arrowU	KEY_RightArrow	_guiR	
                      _altL	_ctrlL	
                      _ctrlL	0	0	
                      _shiftL	_enter	_space	
 
                      )
-                    (	;; unused
+                    (;;1	
+		     ;; unused
                      0
                      ;; left hand
-                     KEY_CapsLock	KEY_7_Ampersand	0x2F	0x30	0	0	0	
+                     KEY_CapsLock	KEY_7_Ampersand	(0x2F :s)	(0x30 :s)	0	0	0	
                      KEY_LeftAlt	0	0	KEY_UpArrow	KEY_PageUp	0	1	
                      KEY_LeftControl	KEY_Home	KEY_LeftArrow	KEY_DownArrow	KEY_RightArrow	KEY_End	
                      KEY_LeftShift	0	0	0	KEY_PageDown	0	0	
@@ -53,14 +54,14 @@
                      0	0	0	
                      0	0	0	
                      )
-                    (
+                    (;;2
                      ;; unused
-                     0
+                     (0 dbtldr)
                      ;; left hand
                      0	0	0	0	0	0	0	
-                     0	0	0	_7	_0	45	0	
-                     0	KEY_Slash_Question	KEY_Slash_Question	_8	_9	0x64;;84 / 85 * 
-                     0	_8	_2	_8	_9	84	0	
+                     0	0 	0	(_7 :a)	(_0 :a)	(45 :a)	0	
+                     0	(KEY_Slash_Question :s)	KEY_Slash_Question	(_8 :s)	(_9 :s)	(0x64 :a) ;;84 / 85 * 
+                     0	(45 :s)	 (_2 :a)	(_8 :a)	(_9 :a)	(84 :a)	0	
                      0	0	0	0	0	
                      0	0	
                      0	0	0	
@@ -72,8 +73,8 @@
                      0	0	_F1  _F2	_F3	KEY_ReturnEnter	0	
                      0	0	KEYPAD_Period_Delete	KEY_ReturnEnter	0	
                      0	0	
-                     0	0	0	
-                     0	0	KEYPAD_0_Insert	
+                     0	0	0 0	
+                     0	0		
                      )
                     ))
 
