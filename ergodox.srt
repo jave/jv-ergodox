@@ -121,6 +121,26 @@ void ctrlx(void) {
     _kbfun_press_release(false, KEY_LeftControl);
 }
 
+void ctrlhome(void) {
+    _kbfun_press_release(true,  KEY_LeftControl);
+    usb_keyboard_send();
+    _kbfun_press_release(true, _home);
+    usb_keyboard_send();
+    _kbfun_press_release(false,  _home);
+    usb_keyboard_send();
+    _kbfun_press_release(false, KEY_LeftControl);
+}
+
+
+void ctrlend(void) {
+    _kbfun_press_release(true,  KEY_LeftControl);
+    usb_keyboard_send();
+    _kbfun_press_release(true, _end);
+    usb_keyboard_send();
+    _kbfun_press_release(false,  _end);
+    usb_keyboard_send();
+    _kbfun_press_release(false, KEY_LeftControl);
+}
 
 
 

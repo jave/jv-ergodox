@@ -37,9 +37,9 @@
                      0
                      ;; left hand
                      KEY_CapsLock	KEY_7_Ampersand	(0x2F :s)	(0x30 :s)	0	0	0	
-                     KEY_LeftAlt	0	0	KEY_UpArrow	KEY_PageUp	0	1	
+                     KEY_LeftAlt	0	0	KEY_UpArrow	KEY_PageUp (0 	&ctrlhome)	1	
                      KEY_LeftControl	KEY_Home	KEY_LeftArrow	KEY_DownArrow	KEY_RightArrow	KEY_End	
-                     KEY_LeftShift	0	0	0	KEY_PageDown	0	0	
+                     KEY_LeftShift	0	0	0	KEY_PageDown	(0  &ctrlend)	0	
                      0	0	0	0	0	
                      0	0	
                      0	0	0	
