@@ -1,8 +1,23 @@
 ;; c-c the ergodox.srt file
-;; switch to empty .c file
+;; open file
+;; ./src/keyboard/ergodox/layout/jv-mod.c
 ;; m-x erg-test-create
+;; m-x compile
+;; teensy_loader_cli -mmcu=atmega32u4 -v -w src/firmware.hex 
 
+
+;; a plain emacs cedst with eieio and srecode should work
 (require 'eieio)
+(require 'srecode)
+
+
+(defun erg-test-create ()
+  (interactive) ;;doesnt really have to be but is convenient
+  (switch-to-buffer "jv-mod.c")
+  (erase-buffer)
+  (erg-create-layout-file "mupp" erg-layout)
+  )
+
 
 ;;mods
 ;;	kprrel,	saltgrprre,	saltgrprre,	saltgrprre,	sshprre,	sshprre,	kprrel,
@@ -14,9 +29,10 @@
                      0
                      ;; left hand
                      _esc	(_8 :a)	(_7 :a)	(_0 :a)	(_8 :s)	(_0 :s)	_esc	
-                     _altL	(_comma :s)	_comma	_period	_P	_Y	1	
+                     ;;                     _altL	(_comma :s)	_comma	_period	_P	_Y	1
+                     _altL	KEY_LeftBracket_LeftBrace   KEY_SingleQuote_DoubleQuote KEY_Semicolon_Colon 	_P	_Y	(_comma :s)
                      _ctrlL    _A	_O	_E	_U	_I	
-                     _shiftL	50	_Q	_J	_K	_X	1	
+                     _shiftL	50	_Q	_J	_K	_X	_comma
                      _guiL	50	_backslash	(:l 2)	(:l 1)	
                      _ctrlL	_altL	
                      0	0	_ctrlL	
@@ -25,7 +41,7 @@
                      2	(50 :s)	(_9 :s)	45	(_9 :a)	(_1 :s)	(_3 :s)	
                      _bracketL	_F	_G	_C	_R	_L	_altL	
                      _D	_H	_T	_N	_S	_ctrlL	
-                     1	_B	_M	_W _V _Z	_shiftL	
+                     _period	_B	_M	_W _V _Z	_shiftL	
                      (:l 1 ) 	(:l 2)	_arrowU	KEY_RightArrow	_guiR	
                      _altL	_ctrlL	
                      _ctrlL	0	0	
@@ -58,7 +74,7 @@
                      ;; unused
                      (0 dbtldr)
                      ;; left hand
-                     0	0	0	0	0	0	0	
+                     0	0	0	0x64 (0x64 :s)   	0	0	
                      0	0 	0	(_7 :a)	(_0 :a)	(45 :a)	0	
                      0	(KEY_Slash_Question :s)	KEY_Slash_Question	(_8 :s)	(_9 :s)	(0x64 :a) ;;84 / 85 * 
                      0	(45 :s)	 (_2 :a)	(_8 :a)	(_9 :a)	(84 :a)	0	
@@ -110,43 +126,21 @@
 
 )
 
-(defun erg-test-create ()
-  (interactive) ;;doesnt really have to be but is convenient
-  (switch-to-buffer "jv-mod.c")
-  (erase-buffer)
-  (erg-create-layout-file "mupp" erg-layout)
-  )
 
 
 (defun erg-keyfunc (sym)
   (or (cadr (assoc sym '((:a saltgrprre) (:s sshprre)))) sym)
 )
 
-;;from info
-;;run in an empty .c buffer
-(defun erg-create-layout-file (classname layers)
-  (if (not (srecode-table))
-      (error "No template table found for mode %s" major-mode))
-  ;;(setq fieldlist (car fieldlist))
-  (let ((temp (srecode-template-get-table (srecode-table) "classdecl:ergodox-mod"))
-        ;; Create a new dictionary
-        (newdict (srecode-create-dictionary) )
-        (childdict))
 
-    (mapcar (lambda (layer)
-              (setq childdict (srecode-dictionary-add-section-dictionary
-                               newdict "LAYERS"))
-              (mapcar 
-               (lambda (key)
-                 (let ((subdict (srecode-dictionary-add-section-dictionary
-                                 childdict "KEYS")))
-                   (message "key '%s'" key)
-                   (cond
+(defun erg-translate-key (key subdict)
+                 (cond
                     ((eq 0 key) ;;0 map to 0 NULL NULL
                      (srecode-dictionary-set-value subdict "NAME" (format "%s" 0))
                      (srecode-dictionary-set-value subdict "PRESS" "NULL")
                      (srecode-dictionary-set-value subdict "RELEASE" "NULL")                         )
 
+                    
                     ((atom key) ;;atom map to atom kprrel kprrel, a keypress
                      (srecode-dictionary-set-value subdict "NAME" (format "%s" key))
                      (srecode-dictionary-set-value subdict "PRESS" "kprrel")
@@ -166,6 +160,33 @@
                        (srecode-dictionary-set-value subdict "PRESS" (format "%s" (erg-keyfunc (cadr key))))
                        (srecode-dictionary-set-value subdict "RELEASE" (format "%s" (erg-keyfunc (caddr key)))))
                     )
+
+                 )
+
+(defun erg-key-lookup (key))
+
+;;from info
+;;run in an empty .c buffer
+(defun erg-create-layout-file (classname layers)
+  (if (not (srecode-table))
+      (error "No template table found for mode %s" major-mode))
+  ;;(setq fieldlist (car fieldlist))
+  (let ((temp (srecode-template-get-table (srecode-table) "classdecl:ergodox-mod"))
+        ;; Create a new dictionary
+        (newdict (srecode-create-dictionary) )
+        (childdict))
+
+    (mapcar (lambda (layer)
+              (setq childdict (srecode-dictionary-add-section-dictionary
+                               newdict "LAYERS"))
+              (mapcar 
+               (lambda (key)
+                 (let ((subdict (srecode-dictionary-add-section-dictionary
+                                 childdict "KEYS")))
+                   ;;(message "key '%s'" key)
+                   (if (erg-key-lookup key)
+                       (erg-translate-key (erg-key-lookup key) subdict)
+                     (erg-translate-key key subdict))
                    
 
 
