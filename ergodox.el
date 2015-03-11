@@ -3,6 +3,7 @@
 ;; ./src/keyboard/ergodox/layout/jv-mod.c
 ;; m-x erg-test-create
 ;; m-x compile
+;; make -k -C ~/ergodox/
 ;; teensy_loader_cli -mmcu=atmega32u4 -v -w src/firmware.hex 
 
 
@@ -28,21 +29,21 @@
                      ;; unused
                      0
                      ;; left hand
-                     _esc	(_8 :a)	(_7 :a)	(_0 :a)	(_8 :s)	(_0 :s)	_esc	
+                     _esc	(_8 :a)	(_7 :a)	(_0 :a)	(_8 :s)	(_0 :s)	__$
                      ;;                     _altL	(_comma :s)	_comma	_period	_P	_Y	1
-                     _altL	KEY_LeftBracket_LeftBrace   KEY_SingleQuote_DoubleQuote KEY_Semicolon_Colon 	_P	_Y	(_comma :s)
+                     _altL	__å __ä __ö _P	_Y	(_comma :s)
                      _ctrlL    _A	_O	_E	_U	_I	
                      _shiftL	50	_Q	_J	_K	_X	_comma
-                     _guiL	50	_backslash	(:l 2)	(:l 1)	
+                     _guiL	50	KEY_RightBracket_RightBrace	(:l 2)	(:l 1)	
                      _ctrlL	_altL	
                      0	0	_ctrlL	
                      _bs	_tab	_shiftL
                      ;; right hand 51 was got with xev 45 wtih random trial and terror
-                     2	(50 :s)	(_9 :s)	45	(_9 :a)	(_1 :s)	(_3 :s)	
+                     __&	(50 :s)	(_9 :s)	45	(_9 :a)	(_1 :s)	(_3 :s)	
                      _bracketL	_F	_G	_C	_R	_L	_altL	
                      _D	_H	_T	_N	_S	_ctrlL	
                      _period	_B	_M	_W _V _Z	_shiftL	
-                     (:l 1 ) 	(:l 2)	_arrowU	KEY_RightArrow	_guiR	
+                     (:l 1 ) 	(:l 2)	(:l 3)	KEY_RightArrow	_guiR	
                      _altL	_ctrlL	
                      _ctrlL	0	0	
                      _shiftL	_enter	_space	
@@ -92,7 +93,47 @@
                      0	0	0 0	
                      0	0		
                      )
+
+                    (;;3
+                     ;; special new shift layer
+                     0
+                     ;; left hand
+                     _esc	_7 _5 _3 _1 _9	_esc	
+                     ;;                     _altL	(_comma :s)	_comma	_period	_P	_Y	1
+                     _altL	__Å   __Ä __Ö (_P :s)	(_Y :s)	(_comma :s)
+                     _ctrlL    (_A :s)	(_O :s)	(_E :s)	(_U :s)	(_I :s)	
+                     _shiftL	(_2 :s)	(_Q :s)	(_J :s)	(_K :s)	(_X :s)	_comma
+                     _guiL	50	0	(:l 2)	(:l 1)	
+                     _ctrlL	_altL	
+                     0	0	_ctrlL	
+                     _bs	_tab	_shiftL
+                     ;; right hand 51 was got with xev 45 wtih random trial and terror
+                     2	_0 _2 _4 _6 _8	(_3 :s)	
+                     _bracketL	(_F :s)	(_G :s)	(_C :s)	(_R :s)	(_L :s)	_altL	
+                     (_D :s)	(_H :s)	(_T :s)	(_N :s)	(_S :s)	_ctrlL	
+                     _period	(_B :s)	(_M :s)	(_W :s) (_V :s) (_Z :s)	_shiftL	
+                     (:l 1 ) 	(:l 2)	_arrowU	KEY_RightArrow	_guiR	
+                     _altL	_ctrlL	
+                     _ctrlL	0	0	
+                     _shiftL	_enter	_space	
+
+                     )                    
+
+                    
                     ))
+
+(defun erg-key-lookup (key)
+  (cadr (assoc key '((__Å (KEY_LeftBracket_LeftBrace :s))
+                     (__Ä (KEY_SingleQuote_DoubleQuote :s) )
+                     (__Ö (KEY_Semicolon_Colon :s))
+                     (__å KEY_LeftBracket_LeftBrace   )
+                     (__ä KEY_SingleQuote_DoubleQuote )
+                     (__ö KEY_Semicolon_Colon)
+                     (__$ (_4 :a )) 
+                     ;;(__~ (~) ) ;;?
+                     (__& (_6 :s) )
+                     ))))
+
 
 ;;empty layer
 (setq erg-empty-layer
@@ -163,7 +204,6 @@
 
                  )
 
-(defun erg-key-lookup (key))
 
 ;;from info
 ;;run in an empty .c buffer
